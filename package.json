@@ -20,7 +20,6 @@
     "dist",
     "skills",
     "agents",
-    "scripts",
     "README.md",
     "LICENSE"
   ],
@@ -31,7 +30,6 @@
   "scripts": {
     "build": "bun build src/index.ts --outdir dist --target node --format esm",
     "prepublishOnly": "bun run build",
-    "postinstall": "bun run scripts/install.ts",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
     "fmt": "oxfmt --check",
