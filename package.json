@@ -24,11 +24,7 @@
     "LICENSE"
   ],
   "type": "module",
-  "exports": {
-    ".": {
-      "default": "./dist/index.js"
-    }
-  },
+  "main": "./dist/index.js",
   "scripts": {
     "build": "bun build src/index.ts --outdir dist --target node --format esm",
     "prepublishOnly": "bun run build",
