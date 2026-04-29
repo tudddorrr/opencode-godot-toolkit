@@ -32,16 +32,16 @@
     "build": "bun build src/index.ts --outdir dist --target node --format esm",
     "prepublishOnly": "bun run build",
     "postinstall": "bun run scripts/install.ts",
-    "lint": "oxlint --type-aware",
-    "lint:fix": "oxlint --type-aware --fix",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
     "fmt": "oxfmt --check",
     "fmt:fix": "oxfmt --write"
   },
   "devDependencies": {
-    "@opencode-ai/plugin": "^1.14.0",
+    "@opencode-ai/plugin": "^1.14.29",
     "bun-types": "latest",
     "oxfmt": "^0.47.0",
-    "oxlint": "^0.15.0",
+    "oxlint": "^1.62.0",
     "oxlint-tsgolint": "^0.22.1",
     "typescript": "^6.0.3"
   },
