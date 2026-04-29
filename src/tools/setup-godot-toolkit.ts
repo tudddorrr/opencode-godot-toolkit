@@ -90,9 +90,9 @@ function configureLsp(opencodeDir: string) {
   return true
 }
 
-export const installGodotToolkitTool: ToolDefinition = tool({
+export const setupGodotToolkitTool: ToolDefinition = tool({
   description:
-    "Install the Godot toolkit's skills and agent configs into the project's .opencode directory. Run this once after adding the plugin to set up skill files and agent definitions.",
+    'Set up the Godot toolkit for this project by syncing skills, agents, and LSP config into the .opencode directory. Run this once after adding the opencode-godot-toolkit plugin to your opencode.json. Do NOT run npm install - the plugin must already be installed.',
   args: {
     projectRoot: tool.schema
       .string()
