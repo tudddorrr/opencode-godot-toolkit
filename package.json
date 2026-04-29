@@ -1,0 +1,47 @@
+{
+  "name": "opencode-godot-toolkit",
+  "version": "0.0.1",
+  "description": "All-in-one toolkit for using Godot with OpenCode (best practices, LSP, unit tests, doc search)",
+  "keywords": [
+    "agents",
+    "gdscript",
+    "godot",
+    "lsp",
+    "opencode",
+    "skills",
+    "testing"
+  ],
+  "license": "MIT",
+  "files": [
+    "dist",
+    "skills",
+    "agents",
+    "scripts",
+    "README.md",
+    "LICENSE"
+  ],
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "bun build src/index.ts --outdir dist --target node --format esm",
+    "prepublishOnly": "bun run build",
+    "postinstall": "bun run scripts/install.ts",
+    "lint": "oxlint --type-aware",
+    "lint:fix": "oxlint --type-aware --fix",
+    "fmt": "oxfmt --check",
+    "fmt:fix": "oxfmt --write"
+  },
+  "devDependencies": {
+    "@opencode-ai/plugin": "^1.14.28",
+    "bun-types": "latest",
+    "oxfmt": "^0.47.0",
+    "oxlint": "^0.15.0",
+    "oxlint-tsgolint": "^0.22.1",
+    "typescript": "^6.0.3"
+  },
+  "peerDependencies": {
+    "@opencode-ai/plugin": "*"
+  }
+}
