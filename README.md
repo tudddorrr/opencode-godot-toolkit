@@ -29,8 +29,8 @@ Restart OpenCode. Skills and agents are synced automatically on install.
 - `godot-doc-search` — API research via Context7 (requires Context7 MCP)
 - `gdscript-diagnostics` — Refresh LSP cache after edits
 - `gdunit4-test-runner` — Run gdUnit4 tests
-- `gdunit4-test-writer` — Write test code with assertions
-- `godot-best-practices` — Godot best practices for code generation and review
+- `gdunit4-test-writer` — Write unit tests
+- `godot-best-practices` — Ensure Godot best practices are followed when generating/reviewing code
 
 ## Agents
 
