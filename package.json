@@ -25,7 +25,9 @@
   ],
   "type": "module",
   "exports": {
-    ".": "./dist/index.js"
+    ".": {
+      "default": "./dist/index.js"
+    }
   },
   "scripts": {
     "build": "bun build src/index.ts --outdir dist --target node --format esm",
@@ -42,8 +44,5 @@
     "oxlint": "^1.62.0",
     "oxlint-tsgolint": "^0.22.1",
     "typescript": "^6.0.3"
-  },
-  "peerDependencies": {
-    "@opencode-ai/plugin": "^1"
   }
 }

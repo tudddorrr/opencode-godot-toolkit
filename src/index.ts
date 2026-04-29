@@ -12,5 +12,3 @@ export const GodotToolkitPlugin: Plugin = async () => {
     },
   }
 }
-
-export default GodotToolkitPlugin
