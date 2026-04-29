@@ -4,7 +4,7 @@ All-in-one plugin for using Godot with [OpenCode](https://opencode.ai). Heavily 
 
 ## Features
 
-- **LSP Configuration** — Auto-configures Godot Language Server for GDScript support
+- **LSP Configuration** — `install_godot_toolkit` tool configures Godot Language Server for GDScript support
 - **Diagnostics** — `gdscript_diagnostics` tool to refresh LSP cache after file edits
 - **gdUnit4 Integration** — `run_tests` tool to run tests
 - **File Management** — Skills for managing .gd and .uid files together
@@ -21,7 +21,9 @@ Add to your `opencode.json`:
 }
 ```
 
-Restart OpenCode. Skills and agents are synced automatically on install.
+Restart OpenCode, then ask it to set up the toolkit:
+
+> Install the Godot toolkit
 
 ## Skills
 

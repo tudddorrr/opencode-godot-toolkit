@@ -1,18 +1,34 @@
 import { tool, type ToolDefinition } from '@opencode-ai/plugin'
-import { existsSync, cpSync, mkdirSync, readdirSync } from 'fs'
+import { existsSync, cpSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'fs'
 import { join, dirname } from 'path'
+
+type LSPConfig = {
+  command: string[]
+  extensions: string[]
+}
+
+type OpenCodeConfig = {
+  lsp?: Record<string, LSPConfig>
+}
 
 function findPackageRoot(from: string): string | null {
   let dir = from
+
   for (let i = 0; i < 20; i++) {
     const candidate = join(dir, 'node_modules', 'opencode-godot-toolkit')
+
     if (existsSync(candidate)) {
       return candidate
     }
+
     const parent = dirname(dir)
-    if (parent === dir) break
+    if (parent === dir) {
+      break
+    }
+
     dir = parent
   }
+
   return null
 }
 
@@ -39,6 +55,38 @@ function syncTo(target: string, source: string): string[] {
   }
 
   return copied
+}
+
+function configureLsp(projectRoot: string) {
+  const configPath = join(projectRoot, 'opencode.json')
+  let config: OpenCodeConfig = {}
+
+  const lspConfig = {
+    command: ['nc', 'localhost', '6005'],
+    extensions: ['.gd'],
+  }
+
+  if (existsSync(configPath)) {
+    try {
+      config = JSON.parse(readFileSync(configPath, 'utf-8'))
+    } catch {
+      return false
+    }
+  }
+
+  if (!config.lsp || typeof config.lsp !== 'object') {
+    config.lsp = {}
+  }
+
+  const lsp = config.lsp
+  if (lsp.gdscript) {
+    return false
+  }
+
+  lsp.gdscript = lspConfig
+  writeFileSync(configPath, JSON.stringify(config, null, '\t') + '\n')
+
+  return true
 }
 
 export const installGodotToolkitTool: ToolDefinition = tool({
@@ -69,12 +117,13 @@ export const installGodotToolkitTool: ToolDefinition = tool({
 
     const skillsCopied = syncTo(skillsTarget, skillsSource)
     const agentsCopied = syncTo(agentsTarget, agentsSource)
+    const lspConfigured = configureLsp(root)
 
-    if (skillsCopied.length === 0 && agentsCopied.length === 0) {
+    if (skillsCopied.length === 0 && agentsCopied.length === 0 && !lspConfigured) {
       return 'No skills or agents found to install. The package may be corrupted.'
     }
 
-    const lines: string[] = ['Godot toolkit installed successfully!', '']
+    const lines = ['Godot toolkit installed successfully!', '']
 
     if (skillsCopied.length > 0) {
       lines.push(`Skills → ${skillsTarget}`)
@@ -84,6 +133,12 @@ export const installGodotToolkitTool: ToolDefinition = tool({
     if (agentsCopied.length > 0) {
       lines.push(`Agents → ${agentsTarget}`)
       for (const a of agentsCopied) lines.push(`  - ${a}`)
+    }
+
+    if (lspConfigured) {
+      lines.push(`LSP → Configured gdscript language server in opencode.json`)
+    } else {
+      lines.push(`LSP → gdscript already configured in opencode.json, skipping`)
     }
 
     return lines.join('\n')
