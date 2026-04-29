@@ -57,8 +57,9 @@ function syncTo(target: string, source: string): string[] {
   return copied
 }
 
-function configureLsp(projectRoot: string) {
-  const configPath = join(projectRoot, 'opencode.json')
+function configureLsp(opencodeDir: string) {
+  mkdirSync(opencodeDir, { recursive: true })
+  const configPath = join(opencodeDir, 'opencode.json')
   let config: OpenCodeConfig = {}
 
   const lspConfig = {
@@ -117,7 +118,7 @@ export const installGodotToolkitTool: ToolDefinition = tool({
 
     const skillsCopied = syncTo(skillsTarget, skillsSource)
     const agentsCopied = syncTo(agentsTarget, agentsSource)
-    const lspConfigured = configureLsp(root)
+    const lspConfigured = configureLsp(opencodeDir)
 
     if (skillsCopied.length === 0 && agentsCopied.length === 0 && !lspConfigured) {
       return 'No skills or agents found to install. The package may be corrupted.'
@@ -136,9 +137,9 @@ export const installGodotToolkitTool: ToolDefinition = tool({
     }
 
     if (lspConfigured) {
-      lines.push(`LSP → Configured gdscript language server in opencode.json`)
+      lines.push(`LSP → Configured gdscript language server in .opencode/opencode.json`)
     } else {
-      lines.push(`LSP → gdscript already configured in opencode.json, skipping`)
+      lines.push(`LSP → gdscript already configured in .opencode/opencode.json, skipping`)
     }
 
     return lines.join('\n')
