@@ -12,6 +12,10 @@
     "testing"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tudddorrr/opencode-godot-toolkit.git"
+  },
   "files": [
     "dist",
     "skills",
@@ -34,7 +38,7 @@
     "fmt:fix": "oxfmt --write"
   },
   "devDependencies": {
-    "@opencode-ai/plugin": "^1.14.28",
+    "@opencode-ai/plugin": "^1.14.0",
     "bun-types": "latest",
     "oxfmt": "^0.47.0",
     "oxlint": "^0.15.0",
@@ -42,6 +46,6 @@
     "typescript": "^6.0.3"
   },
   "peerDependencies": {
-    "@opencode-ai/plugin": "*"
+    "@opencode-ai/plugin": "^1"
   }
 }
