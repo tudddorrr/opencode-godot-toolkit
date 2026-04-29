@@ -5,16 +5,19 @@ import { join } from 'path'
 function findRunScript(projectRoot: string): string | null {
   const sh = join(projectRoot, 'addons', 'gdUnit4', 'runtest.sh')
   const cmd = join(projectRoot, 'addons', 'gdUnit4', 'runtest.cmd')
+
   if (process.platform === 'win32' && existsSync(cmd)) {
     return cmd
   }
+
   if (existsSync(sh)) {
     return sh
   }
+
   return null
 }
 
-export const runTestsTool: ToolDefinition = tool({
+export const runGdUnitTestsTool: ToolDefinition = tool({
   description:
     'Run gdUnit4 tests for a Godot project using the gdUnit4 CLI. Use after implementing features, fixing bugs, or modifying GDScript files. USE PROACTIVELY to verify code changes.',
   args: {
@@ -47,9 +50,11 @@ export const runTestsTool: ToolDefinition = tool({
     } else {
       runArgs.push('-a', 'res://tests/')
     }
+
     for (const p of args.ignore) {
       runArgs.push('-i', p)
     }
+
     if (args.continueOnFailure) {
       runArgs.push('-c')
     }

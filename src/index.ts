@@ -1,12 +1,12 @@
 import type { Plugin } from '@opencode-ai/plugin'
-import { diagnosticsTool } from './tools/diagnostics.js'
-import { runTestsTool } from './tools/run-tests.js'
+import { gdscriptDiagnosticsTool } from './tools/gdscript-diagnostics.js'
+import { runGdUnitTestsTool } from './tools/run-gdunit-tests.js'
 
 export const GodotToolkitPlugin: Plugin = async () => {
   return {
     tool: {
-      gdscript_diagnostics: diagnosticsTool,
-      gdunit4_run: runTestsTool,
+      gdscript_diagnostics: gdscriptDiagnosticsTool,
+      gdunit4_run: runGdUnitTestsTool,
     },
   }
 }

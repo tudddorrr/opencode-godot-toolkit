@@ -1,7 +1,7 @@
 import { tool, type ToolDefinition } from '@opencode-ai/plugin'
 import { findGodotBin, findProjectRoot } from '../lib/godot.js'
 
-export const diagnosticsTool: ToolDefinition = tool({
+export const gdscriptDiagnosticsTool: ToolDefinition = tool({
   description:
     "Refresh Godot Engine's language server cache so OpenCode's built-in LSP shows current diagnostics for .gd files. Run this after creating or editing GDScript files.",
   args: {
