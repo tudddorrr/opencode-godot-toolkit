@@ -13,7 +13,7 @@ All-in-one plugin for using Godot with [OpenCode](https://opencode.ai). Heavily 
 
 ## Install
 
-Add to your `.opencode/opencode.json`:
+Add to your `opencode.json`:
 
 ```json
 {
