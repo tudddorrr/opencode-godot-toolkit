@@ -1,6 +1,6 @@
 {
   "name": "opencode-godot-toolkit",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "All-in-one toolkit for using Godot with OpenCode (best practices, LSP, unit tests, doc search)",
   "keywords": [
     "agents",
