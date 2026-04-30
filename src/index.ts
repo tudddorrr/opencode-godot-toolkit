@@ -75,7 +75,7 @@ function configureLsp(config: Config) {
   }
 
   lsp.gdscript = {
-    command: ['nc', 'localhost', '6005'],
+    command: ['nc', 'localhost', '6008'],
     extensions: ['.gd'],
   }
 
