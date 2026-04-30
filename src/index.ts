@@ -1,5 +1,5 @@
 import type { Plugin, Config } from '@opencode-ai/plugin'
-import { existsSync, readFileSync } from 'fs'
+import { readFileSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import { gdscriptDiagnosticsTool } from './tools/gdscript-diagnostics.js'
@@ -47,14 +47,14 @@ const agents: AgentConfig[] = [
   },
 ]
 
-function registerSkills(config: Config, dir: string) {
+function registerSkills(config: Config) {
   const cfg = config as CustomConfig
 
   cfg.skills = cfg.skills ?? {}
   cfg.skills.paths = cfg.skills.paths ?? []
 
-  if (existsSync(dir) && !cfg.skills.paths.includes(dir)) {
-    cfg.skills.paths.push(dir)
+  if (!cfg.skills.paths.includes(skillsDir)) {
+    cfg.skills.paths.push(skillsDir)
   }
 }
 
@@ -74,14 +74,18 @@ function registerAgents(config: Config) {
 }
 
 function configureLsp(config: Config) {
-  if (config.lsp === false) return
+  // respect LSPs being turned off
+  if (config.lsp === false) {
+    return
+  }
 
   const lsp = config.lsp ?? {}
-
-  if ('gdscript' in lsp) return
+  if ('gdscript' in lsp) {
+    return
+  }
 
   lsp.gdscript = {
-    command: ['nc', 'localhost', '6005'],
+    command: ['nc', 'localhost', '6008'],
     extensions: ['.gd'],
   }
 
@@ -91,7 +95,7 @@ function configureLsp(config: Config) {
 export const GodotToolkitPlugin: Plugin = async () => {
   return {
     config: async (config: Config) => {
-      registerSkills(config, skillsDir)
+      registerSkills(config)
       registerAgents(config)
       configureLsp(config)
     },
