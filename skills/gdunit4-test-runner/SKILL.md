@@ -16,11 +16,21 @@ Run gdUnit4 tests using the `gdunit4_run` tool, which invokes the gdUnit4 CLI (`
 
 Call the `gdunit4_run` tool:
 
-| Argument            | Type     | Description                                                                                     |
-| ------------------- | -------- | ----------------------------------------------------------------------------------------------- |
-| `paths`             | string[] | Test paths to run (e.g. `["res://tests/test_foo.gd"]`). Empty = all tests under `res://tests/`. |
-| `ignore`            | string[] | Paths or class names to exclude                                                                 |
-| `continueOnFailure` | boolean  | Keep running after first failure (default: false)                                               |
+| Argument            | Type     | Description                                                                          |
+| ------------------- | -------- | ------------------------------------------------------------------------------------ |
+| `paths`             | string[] | Test paths to run (e.g. `["res://test/test_foo.gd"]`). Empty = all discovered tests. |
+| `ignore`            | string[] | Paths or class names to exclude                                                      |
+| `continueOnFailure` | boolean  | Keep running after first failure (default: false)                                    |
+
+## CLI Flags
+
+The tool maps arguments to `runtest.sh` flags:
+
+| Flag              | Argument            | Description                                                     |
+| ----------------- | ------------------- | --------------------------------------------------------------- |
+| `-a <path>`       | `paths`             | Add a test suite directory or file. Omit to discover all tests. |
+| `-c`              | `continueOnFailure` | Continue running after first failure instead of stopping        |
+| `--ignore <name>` | `ignore`            | Exclude a test by name or path (can repeat)                     |
 
 ## Exit Codes
 

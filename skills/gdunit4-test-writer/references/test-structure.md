@@ -88,22 +88,13 @@ func test_example() -> void:
 
 ## Test File Placement
 
-If a convention already exists, follow it. Otherwise:
-
-- **Directory**: `res://tests/`
-- **File naming**: `test_*.gd` or `*_test.gd`
-- **Class naming**: `Test*` (e.g., `TestPlayer`, `TestInventory`)
-
-### Directory Structure Example
+Mirror the script structure under `res://test/` and use `<name>_test.gd` naming.
 
 ```
-res://tests/
-├── test_player.gd
-├── test_inventory.gd
-├── core/
-│   └── test_game_time.gd
-└── controllers/
-    └── test_input_handler.gd
+Script                            → Test
+res://player.gd                   → res://test/player_test.gd
+res://entities/enemy.gd           → res://test/entities/enemy_test.gd
+res://controllers/input_handler.gd → res://test/controllers/input_handler_test.gd
 ```
 
 ## Async Tests

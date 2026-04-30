@@ -25,7 +25,7 @@ export const runGdUnitTestsTool: ToolDefinition = tool({
       .array(tool.schema.string())
       .default([])
       .describe(
-        "Test paths to run (e.g. ['res://tests/test_foo.gd', 'res://tests/core/']). Empty array runs all tests under res://tests/.",
+        "Test paths to run (e.g. ['res://test/test_foo.gd', 'res://test/core/']). Empty array runs all discovered tests.",
       ),
     ignore: tool.schema
       .array(tool.schema.string())
@@ -39,19 +39,20 @@ export const runGdUnitTestsTool: ToolDefinition = tool({
   async execute(args, ctx) {
     const script = findRunScript(ctx.directory)
     if (!script) {
-      return 'Error: gdUnit4 not found. Expected addons/gdUnit4/runtest.sh in the project root. Make sure gdUnit4 is installed as an addon.'
+      return 'Error: gdUnit4 not found. Make sure gdUnit4 is installed as an addon.'
     }
 
     const runArgs: string[] = []
-    if (args.paths.length > 0) {
-      for (const p of args.paths) {
+    const testPaths = args.paths ?? []
+    const ignored = args.ignore ?? []
+
+    if (testPaths.length > 0) {
+      for (const p of testPaths) {
         runArgs.push('-a', p)
       }
-    } else {
-      runArgs.push('-a', 'res://tests/')
     }
 
-    for (const p of args.ignore) {
+    for (const p of ignored) {
       runArgs.push('-i', p)
     }
 
@@ -65,7 +66,7 @@ export const runGdUnitTestsTool: ToolDefinition = tool({
 
     const output = [result.stdout.toString(), result.stderr.toString()].filter(Boolean).join('\n')
 
-    // Exit codes: 0 = passed, 100 = failures, 101 = warnings
+    // exit codes: 0 = passed, 100 = failures, 101 = warnings
     return {
       output: output || '(no output)',
       metadata: { exitCode: result.exitCode },
