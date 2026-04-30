@@ -1,9 +1,17 @@
 import type { Plugin, Config } from '@opencode-ai/plugin'
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'fs'
+import { existsSync, readFileSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import { gdscriptDiagnosticsTool } from './tools/gdscript-diagnostics.js'
 import { runGdUnitTestsTool } from './tools/run-gdunit-tests.js'
+
+type AgentConfig = {
+  name: string
+  description: string
+  permission: {
+    edit: 'deny'
+  }
+}
 
 type CustomConfig = {
   plugin: Config['plugin']
@@ -13,71 +21,84 @@ type CustomConfig = {
 }
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-
 const skillsDir = join(__dirname, '..', 'skills')
-const agentsSource = join(__dirname, '..', 'agents')
+const promptsDir = join(__dirname, '..', 'prompts')
 
-export const GodotToolkitPlugin: Plugin = async ({ directory }) => {
+function readPrompt(name: string): string {
+  return readFileSync(join(promptsDir, `${name}.md`), 'utf-8')
+}
+
+const agents: AgentConfig[] = [
+  {
+    name: 'gdunit4-test-runner',
+    description:
+      'Run gdUnit4 tests for Godot projects. USE PROACTIVELY after implementing features or fixing bugs.',
+    permission: {
+      edit: 'deny',
+    },
+  },
+  {
+    name: 'godot-doc-search',
+    description:
+      'Search Godot Engine and GDScript documentation. USE PROACTIVELY when planning Godot/GDScript implementations.',
+    permission: {
+      edit: 'deny',
+    },
+  },
+]
+
+function registerSkills(config: Config, dir: string) {
+  const cfg = config as CustomConfig
+
+  cfg.skills = cfg.skills ?? {}
+  cfg.skills.paths = cfg.skills.paths ?? []
+
+  if (existsSync(dir) && !cfg.skills.paths.includes(dir)) {
+    cfg.skills.paths.push(dir)
+  }
+}
+
+function registerAgents(config: Config) {
+  agents.forEach((agentConfig) => {
+    if (!config.agent) {
+      config.agent = {}
+    }
+
+    config.agent[agentConfig.name] = {
+      description: agentConfig.description,
+      mode: 'subagent',
+      permission: agentConfig.permission,
+      prompt: readPrompt(agentConfig.name),
+    }
+  })
+}
+
+function configureLsp(config: Config) {
+  if (config.lsp === false) return
+
+  const lsp = config.lsp ?? {}
+
+  if ('gdscript' in lsp) return
+
+  lsp.gdscript = {
+    command: ['nc', 'localhost', '6005'],
+    extensions: ['.gd'],
+  }
+
+  config.lsp = lsp
+}
+
+export const GodotToolkitPlugin: Plugin = async () => {
   return {
     config: async (config: Config) => {
-      copyDir(agentsSource, join(directory, '.opencode', 'agents'))
-      registerSkillPaths(config, skillsDir)
+      registerSkills(config, skillsDir)
+      registerAgents(config)
       configureLsp(config)
     },
+
     tool: {
       gdscript_diagnostics: gdscriptDiagnosticsTool,
       gdunit4_run: runGdUnitTestsTool,
     },
   }
-}
-
-function copyDir(src: string, dest: string) {
-  if (!existsSync(src)) {
-    return
-  }
-
-  for (const entry of readdirSync(src, { withFileTypes: true })) {
-    const srcPath = join(src, entry.name)
-    const destPath = join(dest, entry.name)
-
-    if (entry.isDirectory()) {
-      copyDir(srcPath, destPath)
-    } else {
-      mkdirSync(dirname(destPath), { recursive: true })
-      writeFileSync(destPath, readFileSync(srcPath))
-    }
-  }
-}
-
-function registerSkillPaths(config: Config, dir: string) {
-  const cfg = config as CustomConfig
-
-  cfg.skills = cfg.skills ?? {}
-  const skills = cfg.skills
-
-  skills.paths = skills.paths ?? []
-  const paths = skills.paths
-
-  if (existsSync(dir) && !paths.includes(dir)) {
-    paths.push(dir)
-  }
-}
-
-function configureLsp(config: Config) {
-  // respect LSP servers being turned off
-  if (config.lsp === false) {
-    return
-  }
-
-  const lsp = config.lsp ?? {}
-  if ('gdscript' in lsp) {
-    return
-  }
-
-  lsp.gdscript = {
-    command: ['nc', 'localhost', '6008'],
-    extensions: ['.gd'],
-  }
-
-  config.lsp = lsp
 }

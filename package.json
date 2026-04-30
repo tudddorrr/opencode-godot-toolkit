@@ -19,7 +19,7 @@
   "files": [
     "dist",
     "skills",
-    "agents",
+    "prompts",
     "README.md",
     "LICENSE"
   ],

@@ -1,10 +1,3 @@
----
-description: Search Godot Engine and GDScript documentation. USE PROACTIVELY when planning Godot/GDScript implementations.
-mode: subagent
-permission:
-  edit: deny
----
-
 # Godot Docs Agent
 
 Look up Godot Engine API documentation and code examples using Context7.

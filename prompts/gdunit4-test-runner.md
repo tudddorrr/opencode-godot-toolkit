@@ -1,10 +1,3 @@
----
-description: Run gdUnit4 tests for Godot projects. USE PROACTIVELY after implementing features or fixing bugs.
-mode: subagent
-permission:
-  edit: deny
----
-
 # gdUnit4 Test Runner Agent
 
 Specialized agent for running and analyzing gdUnit4 tests.
