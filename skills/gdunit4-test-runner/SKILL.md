@@ -25,11 +25,12 @@ Call the `gdunit4_run` tool:
 
 The tool maps arguments to `runtest.sh` flags:
 
-| Flag              | Argument            | Description                                                     |
-| ----------------- | ------------------- | --------------------------------------------------------------- |
-| `-a <path>`       | `paths`             | Add a test suite directory or file. Omit to discover all tests. |
-| `-c`              | `continueOnFailure` | Continue running after first failure instead of stopping        |
-| `--ignore <name>` | `ignore`            | Exclude a test by name or path (can repeat)                     |
+| Flag                    | Argument                   | Description                                                     |
+| ----------------------- | -------------------------- | --------------------------------------------------------------- |
+| `--godot_binary <path>` | _(resolved automatically)_ | Path to the Godot binary                                        |
+| `-a <path>`             | `paths`                    | Add a test suite directory or file. Omit to discover all tests. |
+| `-c`                    | `continueOnFailure`        | Continue running after first failure instead of stopping        |
+| `--ignore <name>`       | `ignore`                   | Exclude a test by name or path (can repeat)                     |
 
 ## Exit Codes
 

@@ -17,6 +17,20 @@ function findRunScript(projectRoot: string): string | null {
   return null
 }
 
+function findGodotBinary() {
+  const fromEnv = process.env['GODOT_PATH'] ?? process.env['GODOT_BIN']
+  if (fromEnv) {
+    return fromEnv
+  }
+
+  const resolved = Bun.which('godot')
+  if (resolved) {
+    return resolved
+  }
+
+  return 'godot'
+}
+
 export const runGdUnitTestsTool: ToolDefinition = tool({
   description:
     'Run gdUnit4 tests for a Godot project using the gdUnit4 CLI. Use after implementing features, fixing bugs, or modifying GDScript files. USE PROACTIVELY to verify code changes.',
@@ -42,9 +56,10 @@ export const runGdUnitTestsTool: ToolDefinition = tool({
       return 'Error: gdUnit4 not found. Make sure gdUnit4 is installed as an addon.'
     }
 
-    const runArgs: string[] = []
     const testPaths = args.paths ?? []
     const ignored = args.ignore ?? []
+
+    const runArgs: string[] = []
 
     if (testPaths.length > 0) {
       for (const p of testPaths) {
@@ -60,7 +75,7 @@ export const runGdUnitTestsTool: ToolDefinition = tool({
       runArgs.push('-c')
     }
 
-    const result = Bun.spawnSync([script, ...runArgs], {
+    const result = Bun.spawnSync([script, '--godot_binary', findGodotBinary(), ...runArgs], {
       cwd: ctx.directory,
     })
 
