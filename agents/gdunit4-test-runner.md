@@ -3,7 +3,6 @@ description: Run gdUnit4 tests for Godot projects. USE PROACTIVELY after impleme
 mode: subagent
 permission:
   edit: deny
-  write: deny
 ---
 
 # gdUnit4 Test Runner Agent

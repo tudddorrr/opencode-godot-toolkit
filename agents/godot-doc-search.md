@@ -3,7 +3,6 @@ description: Search Godot Engine and GDScript documentation. USE PROACTIVELY whe
 mode: subagent
 permission:
   edit: deny
-  write: deny
 ---
 
 # Godot Docs Agent
