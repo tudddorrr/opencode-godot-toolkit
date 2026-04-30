@@ -61,10 +61,6 @@ export const runGdUnitTestsTool: ToolDefinition = tool({
 
     const result = Bun.spawnSync([script, ...runArgs], {
       cwd: ctx.directory,
-      env: {
-        ...process.env,
-        GODOT_BIN: process.env['GODOT_PATH'] ?? process.env['GODOT_BIN'] ?? 'godot',
-      },
     })
 
     const output = [result.stdout.toString(), result.stderr.toString()].filter(Boolean).join('\n')
