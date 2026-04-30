@@ -4,16 +4,16 @@ All-in-one plugin for using Godot with [OpenCode](https://opencode.ai). Heavily 
 
 ## Features
 
-- **LSP Configuration** — `setup_godot_toolkit` tool configures Godot Language Server for GDScript support
+- **LSP Configuration** — Auto-configures Godot Language Server for GDScript support on startup
 - **Diagnostics** — `gdscript_diagnostics` tool to refresh LSP cache after file edits
-- **gdUnit4 Integration** — `run_tests` tool to run tests
-- **File Management** — Skills for managing .gd and .uid files together
-- **Doc Search** — Look up Godot API docs via Context7
+- **gdUnit4 Integration** — `gdunit4_run` tool to run tests
+- **File Management** — Skill for managing .gd and .uid files together
+- **Doc Search** — Skill and agent for looking up Godot API docs via Context7
 - **Best Practices** — Skill guiding code generation and review
 
-## Install
+## Installation
 
-Add to your `opencode.json`:
+Add `opencode-godot-toolkit` to your config:
 
 ```json
 {
@@ -21,9 +21,11 @@ Add to your `opencode.json`:
 }
 ```
 
-Restart OpenCode, then ask it to set up the toolkit:
+### Verify
 
-> Set up the Godot toolkit
+Skills should be discoverable immediately:
+
+> Use the skill tool to list skills
 
 ## Skills
 
@@ -53,7 +55,6 @@ This project uses [Bun](https://github.com/oven-sh/bun).
 ```bash
 bun install
 bun run build
-bun run typecheck
 bun run lint
 bun run fmt:fix
 ```
