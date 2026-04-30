@@ -1,5 +1,5 @@
 import { tool, type ToolDefinition } from '@opencode-ai/plugin'
-import { existsSync, cpSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'fs'
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'fs'
 import { join, dirname } from 'path'
 
 type LSPConfig = {
@@ -32,29 +32,37 @@ function findPackageRoot(from: string): string | null {
   return null
 }
 
-function syncTo(target: string, source: string): string[] {
-  if (!existsSync(source)) {
+function collectFiles(dir: string, base = dir): string[] {
+  if (!existsSync(dir)) {
     return []
   }
 
-  const items = readdirSync(source, { withFileTypes: true })
-  const copied: string[] = []
+  const results: string[] = []
 
-  mkdirSync(target, { recursive: true })
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const full = join(dir, entry.name)
 
-  for (const item of items) {
-    const src = join(source, item.name)
-    const dest = join(target, item.name)
-    if (item.isDirectory()) {
-      cpSync(src, dest, { recursive: true, force: true })
-      copied.push(`${item.name}/`)
+    if (entry.isDirectory()) {
+      results.push(...collectFiles(full, base))
     } else {
-      cpSync(src, dest, { force: true })
-      copied.push(item.name)
+      results.push(full.slice(base.length + 1))
     }
   }
 
-  return copied
+  return results
+}
+
+function writeFilesFromPackage(target: string, source: string): string[] {
+  const files = collectFiles(source)
+
+  for (const rel of files) {
+    const src = join(source, rel)
+    const dest = join(target, rel)
+    mkdirSync(dirname(dest), { recursive: true })
+    writeFileSync(dest, readFileSync(src))
+  }
+
+  return files
 }
 
 function configureLsp(opencodeDir: string) {
@@ -110,30 +118,30 @@ export const setupGodotToolkitTool: ToolDefinition = tool({
       return 'Error: Could not locate opencode-godot-toolkit package. Make sure it is installed in node_modules.'
     }
 
-    const skillsSource = join(packageRoot, 'skills')
-    const agentsSource = join(packageRoot, 'agents')
-
-    const skillsTarget = join(opencodeDir, 'skills')
-    const agentsTarget = join(opencodeDir, 'agents')
-
-    const skillsCopied = syncTo(skillsTarget, skillsSource)
-    const agentsCopied = syncTo(agentsTarget, agentsSource)
+    const skillsWritten = writeFilesFromPackage(
+      join(opencodeDir, 'skills'),
+      join(packageRoot, 'skills'),
+    )
+    const agentsWritten = writeFilesFromPackage(
+      join(opencodeDir, 'agents'),
+      join(packageRoot, 'agents'),
+    )
     const lspConfigured = configureLsp(opencodeDir)
 
-    if (skillsCopied.length === 0 && agentsCopied.length === 0 && !lspConfigured) {
+    if (skillsWritten.length === 0 && agentsWritten.length === 0 && !lspConfigured) {
       return 'No skills or agents found to install. The package may be corrupted.'
     }
 
     const lines = ['Godot toolkit installed successfully!', '']
 
-    if (skillsCopied.length > 0) {
-      lines.push(`Skills → ${skillsTarget}`)
-      for (const s of skillsCopied) lines.push(`  - ${s}`)
+    if (skillsWritten.length > 0) {
+      lines.push(`Skills → ${join(opencodeDir, 'skills')}`)
+      for (const s of skillsWritten) lines.push(`  - ${s}`)
     }
 
-    if (agentsCopied.length > 0) {
-      lines.push(`Agents → ${agentsTarget}`)
-      for (const a of agentsCopied) lines.push(`  - ${a}`)
+    if (agentsWritten.length > 0) {
+      lines.push(`Agents → ${join(opencodeDir, 'agents')}`)
+      for (const a of agentsWritten) lines.push(`  - ${a}`)
     }
 
     if (lspConfigured) {
