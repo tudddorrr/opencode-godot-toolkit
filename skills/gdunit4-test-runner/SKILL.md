@@ -10,7 +10,6 @@ Run gdUnit4 tests using the `gdunit4_run` tool, which invokes the gdUnit4 CLI (`
 ## Requirements
 
 - gdUnit4 addon installed in your Godot project (`addons/gdUnit4/`)
-- Godot Engine on PATH, or `GODOT_BIN` / `GODOT_PATH` env var set
 
 ## Test Execution
 
