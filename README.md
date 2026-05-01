@@ -4,16 +4,19 @@ All-in-one plugin for using Godot with [OpenCode](https://opencode.ai). Heavily 
 
 ## Features
 
-- **LSP Configuration** — Auto-configures Godot Language Server for GDScript support on startup
-- **Diagnostics** — `gdscript_diagnostics` tool to refresh LSP cache after file edits
-- **gdUnit4 Integration** — `gdunit4_run` tool to run tests
-- **File Management** — Skill for managing .gd and .uid files together
-- **Doc Search** — Skill and agent for looking up Godot API docs via Context7
-- **Best Practices** — Skill guiding code generation and review
+- **Best practices & helpers** - Ensure generated code is correct and follows best practices. Automates common tasks like searching docs and managing files.
+- **LSP** - Auto-configured LSP for GDScript.
+- **gdUnit4 Integration** - Support for writing and running tests.
+
+## Requirements
+
+- Godot Engine 4.x (resolved via `GODOT_BIN` or `PATH`).
+- For doc search: [Context7](https://github.com/upstash/context7) MCP configured in OpenCode.
+- For testing: gdUnit4 installed as a Godot addon.
 
 ## Installation
 
-Add `opencode-godot-toolkit` to your config:
+Add the plugin to your config:
 
 ```json
 {
@@ -23,30 +26,28 @@ Add `opencode-godot-toolkit` to your config:
 
 ### Verify
 
-Skills should be discoverable immediately:
-
-> Use the skill tool to list skills
+- Check for the skills below using `/skills`.
+- Check for the agents below using `@`.
+- Check for the tools below using a prompt like `look for gdscript errors` or `run the unit tests`.
 
 ## Skills
 
-- `gdscript-file-manager` — Move/rename/delete .gd files with their .uid companions
-- `godot-doc-search` — API research via Context7 (requires Context7 MCP)
-- `gdscript-diagnostics` — Refresh LSP cache after edits
-- `gdunit4-test-runner` — Run gdUnit4 tests
-- `gdunit4-test-writer` — Write unit tests
-- `godot-best-practices` — Ensure Godot best practices are followed when generating/reviewing code
+- `gdscript-file-manager` - Move/rename/delete `.gd` files with their .uid companions.
+- `godot-doc-search` - API research via Context7.
+- `gdscript-diagnostics` - Refresh LSP cache after edits.
+- `gdunit4-test-runner` - Run gdUnit4 tests.
+- `gdunit4-test-writer` - Write unit tests.
+- `godot-best-practices` - Follow best practices when generating/reviewing code.
 
 ## Agents
 
-- `@godot-doc-search` — Read-only subagent for Godot documentation lookup
-- `@gdunit4-test-runner` — Read-only subagent for running tests
+- `@godot-doc-search` - Read-only subagent for Godot documentation lookup.
+- `@gdunit4-test-runner` - Read-only subagent for running tests.
 
-## Requirements
+## Tools
 
-- [OpenCode](https://opencode.ai) installed
-- Godot Engine 4.x on PATH (or `GODOT_PATH` env var)
-- For doc search: Context7 MCP configured in OpenCode
-- For testing: gdUnit4 installed as a Godot addon
+- `gdunit4_run` - Run gdUnit4 tests. Supports paths, ignore patterns, and continue-on-failure.
+- `gdscript_diagnostics` - Refresh Godot's LSP cache so diagnostics update for `.gd` files.
 
 ## Development
 

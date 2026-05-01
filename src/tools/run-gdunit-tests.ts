@@ -18,7 +18,7 @@ function findRunScript(projectRoot: string): string | null {
 }
 
 function findGodotBinary() {
-  const fromEnv = process.env['GODOT_PATH'] ?? process.env['GODOT_BIN']
+  const fromEnv = process.env['GODOT_BIN']
   if (fromEnv) {
     return fromEnv
   }
@@ -39,7 +39,7 @@ export const runGdUnitTestsTool: ToolDefinition = tool({
       .array(tool.schema.string())
       .default([])
       .describe(
-        "Test paths to run (e.g. ['res://test/test_foo.gd', 'res://test/core/']). Empty array runs all discovered tests.",
+        "Test paths to run (e.g. ['res://test/test_foo.gd', 'res://test/core/']). Empty array scans the entire project (res://).",
       ),
     ignore: tool.schema
       .array(tool.schema.string())
@@ -65,6 +65,8 @@ export const runGdUnitTestsTool: ToolDefinition = tool({
       for (const p of testPaths) {
         runArgs.push('-a', p)
       }
+    } else {
+      runArgs.push('-a', 'res://')
     }
 
     for (const p of ignored) {

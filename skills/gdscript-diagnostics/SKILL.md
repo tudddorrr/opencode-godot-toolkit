@@ -39,5 +39,5 @@ OpenCode's built-in LSP integration (configured by `opencode-godot-toolkit`) wil
 
 ## Requirements
 
-- Godot Engine on PATH (or `GODOT_PATH` env var)
+- Godot Engine 4.x (resolved via `GODOT_BIN` or PATH)
 - `opencode-godot-toolkit` installed for LSP integration

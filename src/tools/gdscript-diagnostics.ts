@@ -36,6 +36,6 @@ export const gdscriptDiagnosticsTool: ToolDefinition = tool({
         .join('\n')
     }
 
-    return `Error: Godot exited ${result.exitCode}. ${logs || 'Set GODOT_PATH or ensure Godot is in PATH.'}`
+    return `Error: Godot exited ${result.exitCode}. ${logs || 'Set GODOT_BIN or ensure Godot is in PATH.'}`
   },
 })

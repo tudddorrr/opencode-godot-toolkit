@@ -2,7 +2,7 @@ import { existsSync } from 'fs'
 import { join } from 'path'
 
 export function findGodotBin() {
-  return process.env['GODOT_PATH'] ?? 'godot'
+  return process.env['GODOT_BIN'] ?? Bun.which('godot') ?? 'godot'
 }
 
 export function findProjectRoot(from: string) {
