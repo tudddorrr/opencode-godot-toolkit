@@ -34,10 +34,4 @@ OpenCode's built-in LSP integration (configured by `opencode-godot-toolkit`) wil
 ### Step 3: Review Results
 
 - **Errors** (e.g., `TYPE_MISMATCH`, `UNUSED_PARAMETER`): Fix your code
-- **False positives**: If code is correct but shows "wrong argument count" after changing signatures — this resolves when the LSP re-scans (already triggered by the tool)
-- **Do not edit** the `.godot/` directory
-
-## Requirements
-
-- Godot Engine 4.x (resolved via `GODOT_BIN` or PATH)
-- `opencode-godot-toolkit` installed for LSP integration
+- **False positives**: If code is correct but shows "wrong argument count" after changing signatures, this will likely resolve itself when the LSP re-scans (already triggered by the tool)
