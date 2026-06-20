@@ -26,7 +26,7 @@
   "type": "module",
   "main": "./dist/index.js",
   "scripts": {
-    "build": "bun build src/index.ts --outdir dist --target node --format esm",
+    "build": "bun build src/index.ts src/godot-lsp-bridge.ts --outdir dist --target node --format esm",
     "prepublishOnly": "bun run build",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
