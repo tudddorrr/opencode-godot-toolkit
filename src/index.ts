@@ -79,17 +79,19 @@ function configureLsp(config: Config) {
     return
   }
 
-  const lsp = config.lsp ?? {}
-  if ('gdscript' in lsp) {
+  if (config.lsp?.gdscript) {
     return
   }
 
-  lsp.gdscript = {
-    command: ['nc', 'localhost', '6008'],
-    extensions: ['.gd'],
-  }
+  const bridgePath = join(__dirname, 'godot-lsp-bridge.js')
 
-  config.lsp = lsp
+  config.lsp = {
+    ...config.lsp,
+    gdscript: {
+      command: ['node', bridgePath],
+      extensions: ['.gd'],
+    },
+  }
 }
 
 export const GodotToolkitPlugin: Plugin = async () => {
