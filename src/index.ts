@@ -9,10 +9,12 @@ type CustomConfig = {
   skills?: {
     paths?: string[]
   }
+  instructions?: string[]
 }
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const skillsDir = join(__dirname, '..', 'skills')
+const rulesDir = join(__dirname, '..', 'rules')
 
 function registerSkills(config: Config) {
   const cfg = config as CustomConfig
@@ -22,6 +24,18 @@ function registerSkills(config: Config) {
 
   if (!cfg.skills.paths.includes(skillsDir)) {
     cfg.skills.paths.push(skillsDir)
+  }
+}
+
+function registerInstructions(config: Config) {
+  const cfg = config as CustomConfig
+
+  cfg.instructions = cfg.instructions ?? []
+
+  const rulePath = join(rulesDir, 'godot.md')
+
+  if (!cfg.instructions.includes(rulePath)) {
+    cfg.instructions.push(rulePath)
   }
 }
 
@@ -50,6 +64,7 @@ export const GodotToolkitPlugin: Plugin = async () => {
   return {
     config: async (config: Config) => {
       registerSkills(config)
+      registerInstructions(config)
       configureLsp(config)
     },
 
