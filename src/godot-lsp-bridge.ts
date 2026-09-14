@@ -1,6 +1,8 @@
 import { createConnection } from 'node:net'
+import { findGodotLspPort } from './lib/godot.js'
 
-const socket = createConnection(6008, '127.0.0.1')
+const port = findGodotLspPort()
+const socket = createConnection(port, '127.0.0.1')
 
 socket.on('connect', () => {
   process.stdin.pipe(socket)

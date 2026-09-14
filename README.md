@@ -5,13 +5,14 @@ All-in-one plugin for using Godot with [OpenCode](https://opencode.ai). Heavily 
 ## Features
 
 - **Best practices & helpers** - Ensure generated code is correct and follows best practices. Automates common tasks like searching docs and managing files.
-- **LSP** - Auto-configured LSP for GDScript.
+- **LSP** - Auto-configured LSP for GDScript, reading the port from Godot's editor settings.
 - **Formatter** - Auto-enables the [GDQuest GDScript formatter](https://github.com/GDQuest/GDScript-formatter) for `.gd` files when the `gdscript-formatter` binary is on `PATH` or installed via the Godot add-on.
 - **gdUnit4 Integration** - Support for writing and running tests.
 
 ## Requirements
 
 - Godot Engine 4.x (resolved via `GODOT_BIN` or `PATH`).
+- Node.js (runs the GDScript LSP bridge).
 - For testing: gdUnit4 installed as a Godot addon.
 
 ## Installation
@@ -51,5 +52,6 @@ This project uses [Bun](https://github.com/oven-sh/bun).
 bun install
 bun run build
 bun run lint
+bun run typecheck
 bun run fmt:fix
 ```
