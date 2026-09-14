@@ -1,6 +1,7 @@
 import type { Plugin, Config } from '@opencode-ai/plugin'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
+import { registerFormatter } from './lib/formatter.js'
 import { gdscriptDiagnosticsTool } from './tools/gdscript-diagnostics.js'
 import { runGdUnitTestsTool } from './tools/run-gdunit-tests.js'
 
@@ -65,6 +66,7 @@ export const GodotToolkitPlugin: Plugin = async () => {
     config: async (config: Config) => {
       registerSkills(config)
       registerInstructions(config)
+      registerFormatter(config)
       configureLsp(config)
     },
 

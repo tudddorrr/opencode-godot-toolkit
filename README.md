@@ -6,6 +6,7 @@ All-in-one plugin for using Godot with [OpenCode](https://opencode.ai). Heavily 
 
 - **Best practices & helpers** - Ensure generated code is correct and follows best practices. Automates common tasks like searching docs and managing files.
 - **LSP** - Auto-configured LSP for GDScript.
+- **Formatter** - Auto-enables the [GDQuest GDScript formatter](https://github.com/GDQuest/GDScript-formatter) for `.gd` files when the `gdscript-formatter` binary is on `PATH` or installed via the Godot add-on.
 - **gdUnit4 Integration** - Support for writing and running tests.
 
 ## Requirements
