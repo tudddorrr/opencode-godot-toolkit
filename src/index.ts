@@ -37,14 +37,6 @@ const agents: AgentConfig[] = [
       edit: 'deny',
     },
   },
-  {
-    name: 'godot-doc-search',
-    description:
-      'Search Godot Engine and GDScript documentation. USE PROACTIVELY when planning Godot/GDScript implementations.',
-    permission: {
-      edit: 'deny',
-    },
-  },
 ]
 
 function registerSkills(config: Config) {

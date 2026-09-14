@@ -5,26 +5,27 @@ description: Search Godot Engine and GDScript documentation. Use when implementi
 
 # Godot Docs
 
-Look up Godot Engine API documentation and code examples using Context7.
-
-Requires: Context7 MCP (`mcp__context7__resolve-library-id`, `mcp__context7__query-docs`) configured in OpenCode.
+Look up Godot Engine API documentation and code examples with the built-in `websearch` and `webfetch` tools.
 
 ## Usage
 
+1. `websearch` `site:docs.godotengine.org <query>` to find the right page.
+2. `webfetch` the result URL.
+
+Class reference pages have a deterministic URL, so fetch them directly when you know the class:
+
 ```
-mcp__context7__query-docs
-  libraryId: "/websites/godotengine_en"
-  query: "[what you want to look up]"
+https://docs.godotengine.org/en/stable/classes/class_<classname>.html
 ```
 
-Use `/websites/godotengine_en` — it has 83,702+ snippets from the official Godot docs.
+Examples: `class_area2d.html`, `class_navigationagent2d.html`, `class_configfile.html` (lowercase, no `_` between words).
 
 ## Example Queries
 
-| Task                | Query                           |
-| ------------------- | ------------------------------- |
-| Collision detection | "Area2D body_entered signal"    |
-| Collectible items   | "Area2D collision pickup"       |
-| Moving platforms    | "AnimatableBody2D platform"     |
-| Enemy pathfinding   | "NavigationAgent2D pathfinding" |
-| Save/load           | "ConfigFile save load"          |
+| Task                | Search query                                     |
+| ------------------- | ------------------------------------------------ |
+| Collision detection | `site:docs.godotengine.org Area2D body_entered`  |
+| Collectible items   | `site:docs.godotengine.org Area2D collision`     |
+| Moving platforms    | `site:docs.godotengine.org AnimatableBody2D`     |
+| Enemy pathfinding   | `site:docs.godotengine.org NavigationAgent2D`    |
+| Save/load           | `site:docs.godotengine.org ConfigFile save load` |

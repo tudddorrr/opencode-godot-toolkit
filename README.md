@@ -11,7 +11,6 @@ All-in-one plugin for using Godot with [OpenCode](https://opencode.ai). Heavily 
 ## Requirements
 
 - Godot Engine 4.x (resolved via `GODOT_BIN` or `PATH`).
-- For doc search: [Context7](https://github.com/upstash/context7) MCP configured in OpenCode.
 - For testing: gdUnit4 installed as a Godot addon.
 
 ## Installation
@@ -33,7 +32,7 @@ Add the plugin to your config:
 ## Skills
 
 - `gdscript-file-manager` - Move/rename/delete `.gd` files with their .uid companions.
-- `godot-doc-search` - API research via Context7.
+- `godot-doc-search` - API research via web search.
 - `gdscript-diagnostics` - Refresh LSP cache after edits.
 - `gdunit4-test-runner` - Run gdUnit4 tests.
 - `gdunit4-test-writer` - Write unit tests.
@@ -41,7 +40,6 @@ Add the plugin to your config:
 
 ## Agents
 
-- `@godot-doc-search` - Read-only subagent for Godot documentation lookup.
 - `@gdunit4-test-runner` - Read-only subagent for running tests.
 
 ## Tools
