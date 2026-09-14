@@ -33,11 +33,11 @@
     "fmt:fix": "oxfmt --write"
   },
   "devDependencies": {
-    "@opencode-ai/plugin": "^1.14.29",
-    "bun-types": "latest",
-    "oxfmt": "^0.47.0",
-    "oxlint": "^1.62.0",
-    "oxlint-tsgolint": "^0.22.1",
-    "typescript": "^6.0.3"
+    "@opencode-ai/plugin": "^1.18.30",
+    "bun-types": "^1.4.2",
+    "oxfmt": "^0.67.0",
+    "oxlint": "^1.82.0",
+    "oxlint-tsgolint": "^7.0.2001",
+    "typescript": "^7.0.2"
   }
 }
