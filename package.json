@@ -3,7 +3,6 @@
   "version": "0.0.15",
   "description": "All-in-one toolkit for using Godot with OpenCode (best practices, LSP, unit tests, doc search)",
   "keywords": [
-    "agents",
     "gdscript",
     "godot",
     "lsp",
@@ -19,7 +18,6 @@
   "files": [
     "dist",
     "skills",
-    "prompts",
     "README.md",
     "LICENSE"
   ],

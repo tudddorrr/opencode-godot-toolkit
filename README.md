@@ -26,7 +26,6 @@ Add the plugin to your config:
 ### Verify
 
 - Check for the skills below using `/skills`.
-- Check for the agents below using `@`.
 - Check for the tools below using a prompt like `look for gdscript errors` or `run the unit tests`.
 
 ## Skills
@@ -37,10 +36,6 @@ Add the plugin to your config:
 - `gdunit4-test-runner` - Run gdUnit4 tests.
 - `gdunit4-test-writer` - Write unit tests.
 - `godot-best-practices` - Follow best practices when generating/reviewing code.
-
-## Agents
-
-- `@gdunit4-test-runner` - Read-only subagent for running tests.
 
 ## Tools
 

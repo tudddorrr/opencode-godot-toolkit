@@ -39,5 +39,3 @@ The tool maps arguments to `runtest.sh` flags:
 - **101**: Test warnings
 
 Test reports are saved to `reports/` in your project directory.
-
-To run tests as a dedicated subagent, @mention `@gdunit4-test-runner`.

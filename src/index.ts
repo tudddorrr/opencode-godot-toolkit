@@ -1,17 +1,8 @@
 import type { Plugin, Config } from '@opencode-ai/plugin'
-import { readFileSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import { gdscriptDiagnosticsTool } from './tools/gdscript-diagnostics.js'
 import { runGdUnitTestsTool } from './tools/run-gdunit-tests.js'
-
-type AgentConfig = {
-  name: string
-  description: string
-  permission: {
-    edit: 'deny'
-  }
-}
 
 type CustomConfig = {
   plugin: Config['plugin']
@@ -22,22 +13,6 @@ type CustomConfig = {
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const skillsDir = join(__dirname, '..', 'skills')
-const promptsDir = join(__dirname, '..', 'prompts')
-
-function readPrompt(name: string): string {
-  return readFileSync(join(promptsDir, `${name}.md`), 'utf-8')
-}
-
-const agents: AgentConfig[] = [
-  {
-    name: 'gdunit4-test-runner',
-    description:
-      'Run gdUnit4 tests for Godot projects. USE PROACTIVELY after implementing features or fixing bugs.',
-    permission: {
-      edit: 'deny',
-    },
-  },
-]
 
 function registerSkills(config: Config) {
   const cfg = config as CustomConfig
@@ -48,21 +23,6 @@ function registerSkills(config: Config) {
   if (!cfg.skills.paths.includes(skillsDir)) {
     cfg.skills.paths.push(skillsDir)
   }
-}
-
-function registerAgents(config: Config) {
-  agents.forEach((agentConfig) => {
-    if (!config.agent) {
-      config.agent = {}
-    }
-
-    config.agent[agentConfig.name] = {
-      description: agentConfig.description,
-      mode: 'subagent',
-      permission: agentConfig.permission,
-      prompt: readPrompt(agentConfig.name),
-    }
-  })
 }
 
 function configureLsp(config: Config) {
@@ -90,7 +50,6 @@ export const GodotToolkitPlugin: Plugin = async () => {
   return {
     config: async (config: Config) => {
       registerSkills(config)
-      registerAgents(config)
       configureLsp(config)
     },
 
