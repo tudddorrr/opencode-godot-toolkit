@@ -52,6 +52,5 @@ This project uses [Bun](https://github.com/oven-sh/bun).
 bun install
 bun run build
 bun run lint
-bun run typecheck
 bun run fmt:fix
 ```
