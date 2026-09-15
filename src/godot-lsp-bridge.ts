@@ -1,11 +1,15 @@
 import { createConnection } from 'node:net'
 import { findGodotLspPort } from './lib/godot.js'
+import { createFrameRewriter } from './lib/lsp.js'
 
 const port = findGodotLspPort()
 const socket = createConnection(port, '127.0.0.1')
 
 socket.on('connect', () => {
-  process.stdin.pipe(socket)
+  const rewrite = createFrameRewriter((data) => socket.write(data))
+
+  process.stdin.on('data', rewrite)
+  process.stdin.on('end', () => socket.end())
   socket.pipe(process.stdout)
 })
 
