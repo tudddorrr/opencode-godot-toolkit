@@ -35,7 +35,7 @@ export const gdscriptDiagnosticsTool: ToolDefinition = tool({
     // the editor hosts the LSP, so no editor means no diagnostics
     const status = (await isGodotLspRunning(port))
       ? "OpenCode's LSP diagnostics are now up to date. Check the editor for errors/warnings on your .gd files."
-      : `Warning: no Godot editor is running on 127.0.0.1:${port}, so OpenCode cannot show GDScript diagnostics. Start the Godot editor to get them.`
+      : `Warning: Godot isn't running on 127.0.0.1:${port}. Start the Godot editor to get diagnostics.`
 
     return [`Cache refreshed for project at: ${root}`, logs, status].filter(Boolean).join('\n')
   },
