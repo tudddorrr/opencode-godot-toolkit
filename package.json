@@ -27,6 +27,7 @@
   "scripts": {
     "build": "bun build src/index.ts src/godot-lsp-bridge.ts --outdir dist --target node --format esm",
     "prepublishOnly": "bun run build",
+    "test": "bun test",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
     "fmt": "oxfmt --check",
