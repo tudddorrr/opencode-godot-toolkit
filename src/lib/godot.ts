@@ -1,4 +1,5 @@
 import { existsSync, readFileSync, readdirSync } from 'fs'
+import { connect } from 'node:net'
 import { homedir } from 'os'
 import { join } from 'path'
 
@@ -43,6 +44,23 @@ function findEditorLspPort() {
 
 export function findGodotLspPort() {
   return findEditorLspPort() ?? 6005
+}
+
+// the language server only listens while the Godot editor is running
+export function isGodotLspRunning(port: number, timeoutMs = 500) {
+  return new Promise<boolean>((resolve) => {
+    const socket = connect(port, '127.0.0.1')
+
+    const done = (running: boolean) => {
+      socket.destroy()
+      resolve(running)
+    }
+
+    socket.setTimeout(timeoutMs)
+    socket.on('connect', () => done(true))
+    socket.on('error', () => done(false))
+    socket.on('timeout', () => done(false))
+  })
 }
 
 export function findProjectRoot(from: string) {

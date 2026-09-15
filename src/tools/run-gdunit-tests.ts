@@ -1,6 +1,7 @@
 import { tool, type ToolDefinition } from '@opencode-ai/plugin'
 import { existsSync } from 'fs'
 import { join } from 'path'
+import { findGodotBin } from '../lib/godot.js'
 
 function findRunScript(projectRoot: string): string | null {
   const sh = join(projectRoot, 'addons', 'gdUnit4', 'runtest.sh')
@@ -15,20 +16,6 @@ function findRunScript(projectRoot: string): string | null {
   }
 
   return null
-}
-
-function findGodotBinary() {
-  const fromEnv = process.env['GODOT_BIN']
-  if (fromEnv) {
-    return fromEnv
-  }
-
-  const resolved = Bun.which('godot')
-  if (resolved) {
-    return resolved
-  }
-
-  return 'godot'
 }
 
 export const runGdUnitTestsTool: ToolDefinition = tool({
@@ -77,7 +64,7 @@ export const runGdUnitTestsTool: ToolDefinition = tool({
       runArgs.push('-c')
     }
 
-    const result = Bun.spawnSync([script, '--godot_binary', findGodotBinary(), ...runArgs], {
+    const result = Bun.spawnSync([script, '--godot_binary', findGodotBin(), ...runArgs], {
       cwd: ctx.directory,
     })
 

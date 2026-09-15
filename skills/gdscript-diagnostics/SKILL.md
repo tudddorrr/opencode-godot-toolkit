@@ -25,11 +25,11 @@ Call the `gdscript_diagnostics` tool:
 | `projectRoot` | string? | Path to project.godot directory (auto-detected) |
 | `verbose`     | boolean | Show Godot logs (default: false)                |
 
-This runs `godot --headless --import --quit` to update Godot's language server cache. Run this once after editing all files (not per-file).
+This runs `godot --headless --import --quit` to update Godot's language server cache.
 
 ### Step 2: Check Diagnostics
 
-OpenCode's built-in LSP integration (configured by `opencode-godot-toolkit`) will show updated diagnostics in the editor after the cache refresh.
+OpenCode's built-in LSP integration (configured by `opencode-godot-toolkit`) shows updated diagnostics after the cache refresh.
 
 ### Step 3: Review Results
 

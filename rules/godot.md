@@ -10,3 +10,5 @@ This is a Godot 4 project. Use the toolkit skills/tools instead of ad-hoc comman
 | After editing `.gd` files                               | `gdscript_diagnostics` tool                  |
 | Writing tests                                           | `gdunit4-test-writer` skill                  |
 | Running tests                                           | `gdunit4_run` tool                           |
+
+Diagnostics need the Godot **editor** running (it hosts the LSP). The formatter is standalone and runs without it.
