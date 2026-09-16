@@ -1,84 +1,68 @@
 ---
 name: godot-best-practices
-description: Godot Engine best practices for code generation and review. Apply these guidelines when writing, refactoring, or reviewing GDScript code and scene structures. USE PROACTIVELY.
+description: Godot 4 best practices for GDScript and scenes. Load before writing, editing, or reviewing any .gd file — gameplay and node trees, but also UI, data classes, Resource/RefCounted types, autoloads, and utility scripts. Distilled from the official Godot best-practices docs.
 ---
 
 # Godot Best Practices
 
-Apply these guidelines when generating or reviewing GDScript code and scene structures.
+Godot 4.x. Favor loose coupling, single responsibility, and engine features over hand-rolled equivalents.
 
-## Naming Conventions
+## Naming
 
-- **Files/folders**: `snake_case` (avoids case-sensitivity issues on export)
-- **GDScript variables/functions**: `snake_case`
-- **Node names**: `PascalCase` (matches built-in node casing)
-- **class_name types**: `PascalCase`
-- **Constants**: `SCREAMING_SNAKE_CASE`
-- **C# scripts**: `PascalCase` (follow C# conventions)
+- Files, folders, GDScript vars/funcs: `snake_case` (C# scripts: `PascalCase`)
+- Node names and `class_name` types: `PascalCase`
+- Constants: `SCREAMING_SNAKE_CASE`
+- `const` scene/script references: `PascalCase` (`const MyScene = preload(...)`) — they name types, not values
+- snake_case everywhere survives Godot's case-sensitive PCK when exporting
 
-## Scene and Script Structure
+## Scenes vs scripts
 
-- **Scenes** for game-specific concepts (levels, characters, UI screens)
-- **Scripts** for reusable tools, editor plugins, or cross-project utilities
-- **Scenes + scripts together**: scene declares composition, script adds behavior
-- Keep scenes **loosely coupled** — avoid hard references to parent/sibling nodes
-- Use **signals** for child-to-parent communication (past-tense names: `health_depleted`, `item_collected`)
-- Use **Callable properties** for parent-to-child behavior injection
-- Use **`@export` variables** for dependency injection from the editor
+- A scene declares a node composition; its root script adds the behavior.
+- Game-specific concept (level, character, UI screen) → scene. Reusable, cross-project tool → script.
+- `PackedScene.instantiate()` is faster than building the same hierarchy in code with `.new()`/`add_child()` — the engine builds scenes in batches.
 
-## Node Usage
+## Coupling, references, interfaces
 
-- **Prefer lightweight alternatives** when nodes aren't needed:
-  - `Object` for custom data structures
-  - `RefCounted` for reference-counted data
-  - `Resource` for serializable data (shows in Inspector)
-- **Avoid Autoload for shared state** — it creates global dependencies that are hard to debug
-- **Use Autoload only** for true singletons that manage their own data (quest system, dialogue system)
-- **Each node should have a single responsibility**
+- Aim for scenes with **no external dependencies**. If a scene must reach out, inject from the parent instead of hardcoding paths or grabbing siblings/globals.
+- Injection options, safest first: (1) connect to a signal — respond only, past-tense names (`item_collected`); (2) set a `Callable` property; (3) set a `Node`/`Object` reference; (4) set a `NodePath`. Pick the most restrictive that works.
+- Siblings must not reference each other; a common ancestor mediates.
+- Node access ladder: `@export var child: Node` (fastest; survives moving the node in the editor) → `@onready var child = $Child` → `$Child` → `get_node("Child")` (slowest). Cache once; never `get_node` in a per-frame path.
+- `load()` returns the engine's **cached** instance — `duplicate()` or `new()` for a fresh copy.
+- The scripting API is duck-typed. Guard dynamic access with `has_method()`, `is`, `is_in_group()`, or `assert()` (note: `assert` is stripped from release exports). Node names and groups act as informal interfaces.
 
-## Performance
+## Autoloads and global state
 
-- **Set properties before adding to scene tree** — avoids triggering setters multiple times
-- **`_process(delta)`** — frame-dependent logic, input checks, recurring non-critical logic
-- **`_physics_process(delta)`** — consistent timestep, kinematic/transform updates
-- **`*_input(event)` callbacks** — prefer over polling `Input` in `_process`
-- **Timers** — for recurring logic that doesn't need per-frame execution
-- **`preload()`** — for resources that should load with the script (constants)
-- **`load()`** — for runtime loading, or when exported value may override
+- Avoid global state. A global manager spreads a bug's origin across the whole project.
+- Autoload only a system that (1) tracks all its own data, (2) must be globally accessible, (3) exists in isolation — e.g. a quest or dialogue system.
+- Systems that modify other systems' data → regular nodes/scenes, not autoloads.
+- Share code with `static func`, state with `static var` (Godot 4.1+) via `class_name`, data via a `Resource` — all avoid an autoload.
+- An autoload is **not** a singleton; it's a node auto-added under the root. Get it with `get_node("/root/Name")`.
 
-## Data Structures
+## Node tree and transforms
 
-- **Array** — fast iteration, fast positional access, slow insertion/deletion (use for ordered collections)
-- **Dictionary** — fast key-value lookup (constant-time), slower iteration
-- **Object/Resource** — when you need signals, properties, or Inspector integration
+- Entry point: `Main` (`main.gd`) → `Node2D/Node3D "World"` + `Control "GUI"`. Swap the World's children to change levels.
+- Think relationally, not spatially: a node is a child only if it should be removed with its parent. Otherwise make it a sibling.
+- Break an inherited transform by inserting a plain `Node` (declarative) or setting `top_level = true` on a `CanvasItem`/`Node3D`.
 
-## Initialization Order
+## Lifecycle and processing
 
-When instantiating scenes, properties set in this order:
+- Instantiation order: default value (setter not called) → `_init()` (setter called) → exported value from the Inspector (setter called).
+- `_init()` builds a subtree in code or does tree-independent setup; `_ready()` runs once all children are ready; `_enter_tree()` when the parent exists but children may not; `_exit_tree()` for cleanup.
+- `_process(delta)`: per-frame, framerate-dependent. `_physics_process(delta)`: fixed timestep — use for kinematics and transform updates. Both run every frame, so keep them light.
+- `_unhandled_input(event)` (or `_input(event)`): fires only on real input. Prefer over polling `Input` in `_process`.
+- Recurring work that needn't run every frame → a `Timer`.
+- Set properties **before** `add_child()` — setters can be expensive (procedural generation especially). Exception: `global_position` can only be set once in the tree.
+- `preload()` at load time; `load()` at runtime. `const X = load(...)` is an error — constants need `preload()`. Don't `preload()` an `@export` default; the scene/Inspector overwrites it — default to `null`.
 
-1. Default value assignment (no setter called)
-2. `_init()` (setter called)
-3. Exported value from Inspector (setter called)
+## Data structures
 
-Use `_ready()` for logic that needs the full scene tree initialized.
-Use `_enter_tree()` for logic when node enters tree (children may not be ready).
-Use `NOTIFICATION_PARENTED` for behavior when parented to another node.
+- Prefer non-Node types for pure data: `RefCounted` (default), `Resource` (needs serialization / Inspector export), `Object` (manual memory, can dangle).
+- Free custom `Object` trees in `NOTIFICATION_PREDELETE`.
+- `Array` for ordered/indexed data — `append`/`pop_back` are cheap, inserting or erasing at the front is not.
+- `Dictionary` for lookup by key; it preserves insertion order.
 
-## Project Organization
+## Project layout
 
-- Group assets near their scenes when possible
-- **`addons/`** folder for third-party resources (even non-editor plugins)
-- **`.gdignore`** file to prevent Godot from importing a folder
-- Keep **case sensitivity** in mind — use `snake_case` to avoid Windows/Linux export issues
-
-## Code Review Checklist
-
-- [ ] Are node names `PascalCase` and file names `snake_case`?
-- [ ] Does the scene avoid hard references to external nodes?
-- [ ] Are signals used for child-to-parent communication?
-- [ ] Are properties set before `add_child()` when possible?
-- [ ] Is `_physics_process` used for consistent-timestep logic?
-- [ ] Are input callbacks used instead of polling in `_process`?
-- [ ] Is Autoload only used for true singletons managing own data?
-- [ ] Does each node/script have a single responsibility?
-- [ ] Are lightweight types (Object/RefCounted/Resource) used when nodes aren't needed?
+- Keep assets near the scenes that use them; split large scenes into smaller reusable ones.
+- Third-party code/assets → top-level `addons/` (even non-editor plugins).
+- `.gdignore` (empty file, contents ignored, no patterns) stops Godot importing a folder.

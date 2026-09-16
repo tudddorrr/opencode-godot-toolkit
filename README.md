@@ -1,13 +1,16 @@
-# opencode-godot-toolkit
+# Opencode Godot toolkit
 
-All-in-one plugin for using Godot with [OpenCode](https://opencode.ai). Heavily inspired by [claude-godot-tools](https://github.com/minami110/claude-godot-tools).
+An all-in-one plugin for using Godot with [OpenCode](https://opencode.ai).
+
+This toolkit is designed to help agents write better, more maintainable GDScript code and automate common tasks without being prompted to.
 
 ## Features
 
-- **Best practices & helpers** - Ensure generated code is correct and follows best practices. Automates common tasks like searching docs and managing files.
-- **LSP** - Auto-configured LSP for GDScript, reading the port from Godot's editor settings.
-- **Formatter** - Auto-formats `.gd` files on edit with the [GDQuest GDScript formatter](https://github.com/GDQuest/GDScript-formatter).
-- **gdUnit4 Integration** - Support for writing and running tests.
+- **Best practices guidelines** - Ensure code and scenes are correct, efficient and maintainable according to Godot's [best practices advice](https://docs.godotengine.org/en/stable/tutorials/best_practices/index.html).
+- **Common task automation** - Skills for automatically searching docs and managing files.
+- **LSP** - Auto-configured LSP for GDScript.
+- **Formatter** - Auto-configured formatting for `.gd` files.
+- **gdUnit4 Integration** - Support for writing and running unit tests.
 
 ## Requirements
 
@@ -16,8 +19,8 @@ All-in-one plugin for using Godot with [OpenCode](https://opencode.ai). Heavily 
 
 ## Optional
 
-- [gdUnit4](https://github.com/godot-gdunit-labs/gdUnit4) - enables writing and running tests.
-- [GDQuest GDScript formatter](https://github.com/GDQuest/GDScript-formatter) - formats `.gd` files on edit, detected on `PATH` or via its Godot add-on.
+- [gdUnit4](https://github.com/godot-gdunit-labs/gdUnit4) - If available, agents will write and run unit tests.
+- [GDQuest GDScript formatter](https://github.com/GDQuest/GDScript-formatter) - If available (detected via `PATH` or the addon), agents will format `.gd` files.
 
 ## Installation
 
@@ -32,12 +35,12 @@ Add the plugin to your config:
 ### Verify
 
 - Check for the skills below using `/skills`.
-- Check for the tools below using a prompt like `look for gdscript errors` or `run the unit tests`.
+- Check for the tools below using prompts like `find gdscript errors` or `run the unit tests`.
 
 ## Skills
 
-- `gdscript-file-manager` - Move/rename/delete `.gd` files with their .uid companions.
-- `godot-doc-search` - API research via web search.
+- `gdscript-file-manager` - Move/rename/delete `.gd` files with their `.uid` companions.
+- `godot-doc-search` - API research based on your project's Godot version.
 - `gdscript-diagnostics` - Refresh LSP cache after edits.
 - `gdunit4-test-runner` - Run gdUnit4 tests.
 - `gdunit4-test-writer` - Write unit tests.
@@ -58,3 +61,4 @@ bun run build
 bun run lint
 bun run fmt:fix
 ```
+
