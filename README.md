@@ -19,7 +19,7 @@ This toolkit is designed to help agents write better, more maintainable GDScript
 
 ## Optional
 
-- [gdUnit4](https://github.com/godot-gdunit-labs/gdUnit4) - If available, agents will write and run unit tests.
+- [gdUnit4 (6.x)](https://github.com/godot-gdunit-labs/gdUnit4) - If available, agents will write and run unit tests.
 - [GDQuest GDScript formatter](https://github.com/GDQuest/GDScript-formatter) - If available (detected via `PATH` or the addon), agents will format `.gd` files.
 
 ## Installation
@@ -42,8 +42,8 @@ Add the plugin to your config:
 - `gdscript-file-manager` - Move/rename/delete `.gd` files with their `.uid` companions.
 - `godot-doc-search` - API research based on your project's Godot version.
 - `gdscript-diagnostics` - Refresh LSP cache after edits.
-- `gdunit4-test-runner` - Run gdUnit4 tests.
-- `gdunit4-test-writer` - Write unit tests.
+- `running-gdunit4-tests` - Run gdUnit4 tests.
+- `writing-gdunit4-tests` - Write gdUnit4 test suites.
 - `godot-best-practices` - Follow best practices when generating/reviewing code.
 
 ## Tools
@@ -61,4 +61,3 @@ bun run build
 bun run lint
 bun run fmt:fix
 ```
-

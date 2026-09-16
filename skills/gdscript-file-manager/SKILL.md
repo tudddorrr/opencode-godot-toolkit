@@ -5,21 +5,33 @@ description: Move, rename, or delete GDScript files with their .uid files for Go
 
 # GDScript File Manager
 
-Manage GDScript files (.gd) along with their corresponding .uid files.
+Manage `.gd` files together with their `.uid` companions.
 
-## Core Principle
+## Core principle
 
-Godot Engine auto-generates a `.uid` file for each resource. **Always handle .gd and .uid files together.**
+Godot generates a `.uid` file per resource. **Always move, rename, and delete the `.gd` and its `.uid` together** — handling one without the other breaks project references.
 
 ## Operations
 
-- **Move**: `mv <source>.gd <dest>.gd && mv <source>.gd.uid <dest>.gd.uid`
-- **Rename**: `mv <old>.gd <new>.gd && mv <old>.gd.uid <new>.gd.uid`
-- **Delete**: `rm <file>.gd && rm <file>.gd.uid`
+```bash
+# move
+mv <src>.gd <dest>.gd && mv <src>.gd.uid <dest>.gd.uid
+
+# rename
+mv <old>.gd <new>.gd && mv <old>.gd.uid <new>.gd.uid
+
+# delete
+rm <file>.gd && rm <file>.gd.uid
+
+# many files at once
+for f in components/*.gd; do
+	n=$(basename "$f")
+	mv "components/$n" "systems/$n" && mv "components/$n.uid" "systems/$n.uid"
+done
+```
 
 ## Notes
 
-- Never manually create or edit .uid files - Godot manages them automatically
-- Always process both files together to avoid breaking project references
-- Verify paths with `ls` before operations
-- See examples.md for detailed examples and troubleshooting
+- Never create or edit `.uid` files by hand — Godot manages them.
+- `mkdir -p` the destination first when moving into a new directory.
+- Verify paths with `ls` before operating.

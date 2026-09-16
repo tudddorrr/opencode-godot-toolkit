@@ -14,8 +14,9 @@ type CustomConfig = {
 }
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const skillsDir = join(__dirname, '..', 'skills')
-const rulesDir = join(__dirname, '..', 'rules')
+const pluginRoot = join(__dirname, '..')
+const skillsDir = join(pluginRoot, 'skills')
+const rulesDir = join(pluginRoot, 'rules')
 
 function registerSkills(config: Config) {
   const cfg = config as CustomConfig

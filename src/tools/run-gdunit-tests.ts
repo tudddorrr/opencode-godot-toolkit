@@ -18,20 +18,30 @@ function findRunScript(projectRoot: string): string | null {
   return null
 }
 
+// gdUnit4 CLI exit codes -> agent-readable meaning
+const EXIT_CODES: Record<number, string> = {
+  0: 'passed',
+  100: 'test failures or errors',
+  101: 'passed, but orphan nodes were detected; free created nodes with auto_free()',
+  103: 'headless run blocked; input-driven tests need an editor-enabled run',
+  104: 'unsupported Godot version',
+  105: 'script errors during test discovery',
+}
+
 export const runGdUnitTestsTool: ToolDefinition = tool({
   description:
-    'Run gdUnit4 tests for a Godot project using the gdUnit4 CLI. Use after implementing features, fixing bugs, or modifying GDScript files. USE PROACTIVELY to verify code changes.',
+    'Run gdUnit4 (v6) tests for a Godot project using the gdUnit4 CLI. Use after implementing features, fixing bugs, or modifying GDScript files. USE PROACTIVELY to verify code changes.',
   args: {
     paths: tool.schema
       .array(tool.schema.string())
       .default([])
       .describe(
-        "Test paths to run (e.g. ['res://test/test_foo.gd', 'res://test/core/']). Empty array scans the entire project (res://).",
+        "Test suite directories or files to run (e.g. ['res://test/test_foo.gd', 'res://test/core/']). Empty array scans the entire project (res://).",
       ),
     ignore: tool.schema
       .array(tool.schema.string())
       .default([])
-      .describe('Test paths or class names to exclude.'),
+      .describe('Suites to exclude, by name or as `SuiteName:test_name`.'),
     continueOnFailure: tool.schema
       .boolean()
       .default(false)
@@ -70,10 +80,13 @@ export const runGdUnitTestsTool: ToolDefinition = tool({
 
     const output = [result.stdout.toString(), result.stderr.toString()].filter(Boolean).join('\n')
 
-    // exit codes: 0 = passed, 100 = failures, 101 = warnings
+    const exitCode = result.exitCode ?? -1
+    const meaning = EXIT_CODES[exitCode] ?? 'unknown exit code'
+    const summary = exitCode === 0 ? '' : `\n\n[gdunit4_run] exit ${exitCode}: ${meaning}`
+
     return {
-      output: output || '(no output)',
-      metadata: { exitCode: result.exitCode },
+      output: (output || '(no output)') + summary,
+      metadata: { exitCode },
     }
   },
 })
