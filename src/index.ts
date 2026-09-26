@@ -1,79 +1,41 @@
-import type { Plugin, Config } from '@opencode-ai/plugin'
-import { join, dirname } from 'path'
+import type { Context } from '@opencode/plugin/promise/plugin'
+import { Plugin } from '@opencode/plugin'
+import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 import { registerFormatter } from './lib/formatter.js'
-import { gdscriptDiagnosticsTool } from './tools/gdscript-diagnostics.js'
-import { runGdUnitTestsTool } from './tools/run-gdunit-tests.js'
-
-type CustomConfig = {
-  plugin: Config['plugin']
-  skills?: {
-    paths?: string[]
-  }
-  instructions?: string[]
-}
+import { registerInstructions } from './lib/instructions.js'
+import { registerSkills } from './lib/skills.js'
+import { registerTools } from './tools/index.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const pluginRoot = join(__dirname, '..')
 const skillsDir = join(pluginRoot, 'skills')
 const rulesDir = join(pluginRoot, 'rules')
+const bridgePath = join(__dirname, 'godot-lsp-bridge.js')
 
-function registerSkills(config: Config) {
-  const cfg = config as CustomConfig
-
-  cfg.skills = cfg.skills ?? {}
-  cfg.skills.paths = cfg.skills.paths ?? []
-
-  if (!cfg.skills.paths.includes(skillsDir)) {
-    cfg.skills.paths.push(skillsDir)
-  }
-}
-
-function registerInstructions(config: Config) {
-  const cfg = config as CustomConfig
-
-  cfg.instructions = cfg.instructions ?? []
-
-  const rulePath = join(rulesDir, 'godot.md')
-
-  if (!cfg.instructions.includes(rulePath)) {
-    cfg.instructions.push(rulePath)
-  }
-}
-
-function configureLsp(config: Config) {
-  // respect LSPs being turned off
-  if (config.lsp === false) {
+// V2 plugins cannot register LSP servers: config is no longer mutable. Print
+// the exact snippet instead so upgrading V1 users can restore diagnostics.
+function logLspHint(ctx: Context) {
+  if (ctx.options['lspHint'] === false) {
     return
   }
 
-  if (config.lsp?.gdscript) {
-    return
-  }
-
-  const bridgePath = join(__dirname, 'godot-lsp-bridge.js')
-
-  config.lsp = {
-    ...config.lsp,
-    gdscript: {
-      command: ['node', bridgePath],
-      extensions: ['.gd'],
-    },
-  }
+  console.log(
+    [
+      '[opencode-godot-toolkit] OpenCode v2 plugins cannot register LSPs, so the GDScript LSP must be configured once in opencode.json:',
+      `  "lsp": { "gdscript": { "command": ["node", ${JSON.stringify(bridgePath)}], "extensions": [".gd"] } }`,
+      'Set the plugin option "lspHint": false to hide this hint.',
+    ].join('\n'),
+  )
 }
 
-export const GodotToolkitPlugin: Plugin = async () => {
-  return {
-    config: async (config: Config) => {
-      registerSkills(config)
-      registerInstructions(config)
-      registerFormatter(config)
-      configureLsp(config)
-    },
-
-    tool: {
-      gdscript_diagnostics: gdscriptDiagnosticsTool,
-      gdunit4_run: runGdUnitTestsTool,
-    },
-  }
-}
+export default Plugin.define({
+  id: 'opencode-godot-toolkit',
+  async setup(ctx) {
+    await registerSkills(ctx, skillsDir)
+    await registerInstructions(ctx, join(rulesDir, 'godot.md'))
+    await registerFormatter(ctx)
+    await registerTools(ctx)
+    logLspHint(ctx)
+  },
+})
