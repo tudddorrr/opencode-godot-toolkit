@@ -61,3 +61,7 @@ bun run build
 bun run lint
 bun run fmt:fix
 ```
+
+## Acknowledgments
+
+Heavily inspired by [minami110/claude-godot-tools](https://github.com/minami110/claude-godot-tools).
